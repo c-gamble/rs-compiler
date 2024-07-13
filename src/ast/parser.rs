@@ -14,7 +14,7 @@ impl Parser {
         Self { tokens: Vec::new(), current: 0 }
     }
 
-    pub fn from_tokens(tokens) -> Self {
+    pub fn from_tokens(tokens: Vec<Token>) -> Self {
         Self { tokens, current: 0 } 
     }
     
@@ -33,12 +33,15 @@ impl Parser {
 
     fn parse_statement(&mut self) -> Option<ASTStatement> {
         let token = self.current()?;
+        if token.kind == TokenKind::EOF {
+            return None;
+        }
         let expr = self.parse_expression()?;
         return Some(ASTStatement::expression(expr));
     }
 
     fn parse_expression(&mut self) -> Option<ASTExpression> {
-        let token = self.current()?;
+        let token = self.consume()?;
         match token.kind {
             TokenKind::Number(number) => {
                 Some(ASTExpression::number(number))
@@ -49,11 +52,18 @@ impl Parser {
         }
     }
 
-    fn peek(&self, offset: usize) -> Option<&Token> {
-        self.tokens.get(self.current+offset)
+    fn peek(&self, offset: isize) -> Option<&Token> {
+        self.tokens.get((self.current as isize +offset) as usize)
     }
 
     fn current(&self) -> Option<&Token> {
         self.peek(0)
     }
+
+    fn consume(&mut self) -> Option<&Token> {
+        self.current = 1;
+        let token = self.peek(-1)?;
+        return Some(token);
+    }
+
 }

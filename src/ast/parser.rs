@@ -38,7 +38,7 @@ impl Parser {
             self.consume();
             let operator_precedence = operator.precedence();
 
-            if operator_precedence <= precedence {
+            if operator_precedence < precedence {
                 break;
             }
 

@@ -5,7 +5,7 @@ use crate::ast::parser::Parser;
 
 mod ast;
 fn main() {
-    let input = "(7 + 8) * 9 /  7 + 3 * 9";
+    let input = "7 - (30 + 7) * 8 / 2";
 
     let mut lexer = Lexer::new(input);
     let mut tokens = Vec::new();
